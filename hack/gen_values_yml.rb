@@ -12,6 +12,7 @@ as the default paths assume as much.
 --config    Path to the jekyll config. [default: _config.yml]
 --versions  Path to the versions.yml. [default: _data/versions.yml]
 --registry  The registry prefix. [default: quay.io]
+--chart     The chart to render. [default: calico]
 "
 
 OptionParser.new do |parser|
@@ -26,6 +27,10 @@ OptionParser.new do |parser|
     parser.on("-r", "--registry=REGISTRY") do |registry|
         @image_registry = registry
     end
+
+    parser.on("-C", "--chart=CHART") do |chart|
+        @chart = chart
+    end
 end.parse!
 
 @version = ARGV.pop
@@ -37,6 +42,7 @@ end
 @path_to_config ||= "_config.yml"
 @path_to_versions ||= "_data/versions.yml"
 @image_registry ||= "quay.io/"
+@chart ||= "calico"
 
 # In order to preserve backwards compatibility with the existing template system,
 # we process config.yml for imageNames and _versions.yml for tags,
@@ -47,4 +53,4 @@ imageNames = config["imageNames"]
 versions_yml = YAML::load_file(@path_to_versions)
 versions = parse_versions(versions_yml, @version)
 
-print gen_values(@version, versions, imageNames, @image_registry)
+print gen_values(@version, versions, imageNames, @image_registry, @chart)

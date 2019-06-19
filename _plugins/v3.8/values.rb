@@ -1,4 +1,4 @@
-def gen_values_v3_8(versions, imageNames, imageRegistry)
+def gen_values_v3_8(versions, imageNames, imageRegistry, chart)
     versionsYml = <<~EOF
     datastore: kubernetes
     # Config for etcd

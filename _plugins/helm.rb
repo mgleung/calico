@@ -18,6 +18,7 @@ module Jekyll
     def initialize(tag_name, extra_args, liquid_options)
       super
 
+      @chart = "calico"
       @extra_args = extra_args
     end
     def render(context)
@@ -48,7 +49,7 @@ module Jekyll
         end
       end
 
-      versionsYml = gen_values(version, vs, imageNames, imageRegistry)
+      versionsYml = gen_values(version, vs, imageNames, imageRegistry, @chart)
 
       tv = Tempfile.new("temp_versions.yml")
       tv.write(versionsYml)
@@ -56,7 +57,7 @@ module Jekyll
 
       # Execute helm.
       # Set the default etcd endpoint placeholder for rendering in the docs.
-      cmd = """helm template _includes/#{version}/charts/calico \
+      cmd = """helm template _includes/#{version}/charts/#{@chart} \
         -f #{tv.path} \
         -f #{t.path} \
         --set etcd.endpoints='http://<ETCD_IP>:<ETCD_PORT>'"""
